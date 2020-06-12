@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "module": "amd",
+    "outFile": "./build/hatebviz.js",
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "sourceMap": true
+  },
+  "files": [
+    "typings/index.d.ts",
+    "src/hatebViz.ts",
+    "src/moveHumans.ts",
+    "src/moveHumansViz.ts"
+  ]
+}

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+
+  <!-- style -->
+  <link rel="stylesheet" href="dist/spectre.min.css" />
+  <link rel="stylesheet" href="css/slider.css" />
+
+  <!--ros-->
+  <script type="text/javascript" src="http://localhost/scripts/threejs/current/three.min.js"></script>
+  <script type="text/javascript" src="http://localhost/scripts/threejs/current/ColladaLoader.min.js"></script>
+  <script type="text/javascript" src="http://localhost/scripts/ColladaAnimationCompress/current/ColladaLoader2.min.js"></script>
+  <script type="text/javascript" src="http://localhost/scripts/threejs/current/STLLoader.min.js"></script>
+  <script type="text/javascript" src="http://localhost/scripts/EventEmitter2/current/eventemitter2.min.js"></script>
+  <script type="text/javascript" src="http://localhost/scripts/roslibjs/current/roslib.js"></script>
+  <script type="text/javascript" src="http://localhost/scripts/ros3djs/current/ros3d.js"></script>
+  <script type="text/javascript" src="http://localhost/dist/ros3dnavts/build/ros3dnav.js"></script>
+  <script type="text/javascript" src="http://localhost/dist/rosjs-typings/rosmsgs/build/rosmsgs.js"></script>
+
+  <!--hatebviz-->
+  <script type="text/javascript" src="hatebviz.js"></script>
+</head>
+
+<body onload="init()">
+  <div class="container">
+    <div class="columns">
+
+      <div class="column col-9" id="viewer">
+        <p id="status">
+          Connecting to rosbridge...
+        </p>
+      </div>
+
+      <div class="column col-3">
+
+        <label class="form-label" for="message-area">Robot</label>
+        <div class="columns col-gapless">
+          <div class="col-6">
+            <button class="btn btn-block" id="trobot-start-bt">Set Start</button>
+          </div>
+          <div class="col-6">
+            <button class="btn btn-block" id="trobot-goal-bt">Set Goal</button>
+          </div>
+        </div>
+
+        <label class="form-label" for="message-area"></label>
+        <label class="form-label" for="message-area">Humans</label>
+        <div class="columns col-gapless">
+          <div class="col-2">
+            <input type="text" class="form-input" placeholder="Human ID" id="thuman-id-ip" />
+          </div>
+          <div class="col-4">
+            <button class="btn btn-block" id="add-thuman-bt">Add/Start</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-block" id="delete-thuman-bt">Delete</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-block" id="goal-thuman-bt">Goal</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <label class="form-label" for="message-area">Visualization</label>
+        <div class="columns col-gapless col-multiline">
+          <div class="column col-xs-4" style="padding-bottom: 0px; padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="robot-global-plan-cb" />
+              <i class="form-icon"></i> R-GP
+            </label>
+          </div>
+          <div class="column col-xs-4" style="padding-bottom: 0px; padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="robot-local-plan-cb" />
+              <i class="form-icon"></i> R-LP
+            </label>
+          </div>
+          <div class="column col-xs-4" style="padding-bottom: 0px; padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="robot-local-poses-cb" />
+              <i class="form-icon"></i> R-Poses
+            </label>
+          </div>
+          <div class="column col-xs-4" style="padding-bottom: 0px; padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="human-global-plans-cb" />
+              <i class="form-icon"></i> H-GP
+            </label>
+          </div>
+          <div class="column col-xs-4" style="padding-bottom: 0px; padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="human-local-plans-cb" />
+              <i class="form-icon"></i> H-LP
+            </label>
+          </div>
+          <div class="column col-xs-4" style="padding-bottom: 0px; padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="human-local-poses-cb" />
+              <i class="form-icon"></i> H-Poses
+            </label>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <label class="form-label" for="message-area">Parameters</label>
+        <div class="form-group">
+          <div class="input-group">
+            <div class="columns col-gapless">
+              <div class="column col-10" style="padding-bottom: 0px; padding-top: 0px;">
+                <select class="form-select" style="width: 100%" id="double-param-name-sl">
+                  <option>Choose a parameter (double)</option>
+                </select>
+              </div>
+              <div class="column col-2" style="padding-bottom: 0px; padding-top: 0px;">
+                <input type="text" class="form-input" placeholder="value" style="width: 100%" id="double-param-value-ip" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="columns col-gapless">
+            <div class="column col-10" style="padding-bottom: 0px; padding-top: 0px;">
+              <select class="form-select" style="width: 100%" id="bool-param-name-sl">
+                <option>Choose a parameter (bool)</option>
+              </select>
+            </div>
+            <div class="column col-2" style="padding-bottom: 0px; padding-top: 0px;">
+              <label class="form-switch" style="padding-bottom: 15%; width: 100%; margin-left: 20%">
+                <input type="checkbox" id="bool-param-value-cb"/> <i class="form-icon"></i>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <label class="form-label" for="message-area">Experiments</label>
+        <div class="form-group">
+          <div class="columns col-gapless">
+            <div class="column col-9" style="padding-bottom: 0px; padding-top: 0px;">
+              <select class="form-select" style="width: 100%" id="experiments-sl">
+                <option>Choose an experiment</option>
+              </select>
+            </div>
+            <div class="column col-3" style="padding-bottom: 0px; padding-top: 0px;">
+              <button class="btn btn-block" style="width: 100%" id="texperiment-reset-bt">Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <button class="btn btn-block" id="optimize-bt">Optimize</button>
+        <div class="form-group">
+          <label class="form-label" for="message-lb">Message</label>
+          <textarea readonly class="form-input" id="message-lb" placeholder="" rows="15"></textarea>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>

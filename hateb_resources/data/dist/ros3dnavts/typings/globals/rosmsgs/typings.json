@@ -1,0 +1,13 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/harmishhk/rosjs-typings/c078521380b57dda9e823be09a41385a4d019ef5/rosmsgs/typings.json",
+    "raw": "github:harmishhk/rosjs-typings/rosmsgs/typings.json#c078521380b57dda9e823be09a41385a4d019ef5",
+    "version": "0.1.5",
+    "files": [
+      "build/rosmsgs.d.ts",
+      "src/tfWebRepublisher.d.ts"
+    ],
+    "name": "rosmsgs"
+  }
+}

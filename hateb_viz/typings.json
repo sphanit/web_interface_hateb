@@ -1,0 +1,14 @@
+{
+  "name": "hateb_viz",
+  "main": "index.d.ts",
+  "homepage": "https://github.com/harmishhk/hateb_viz",
+  "version": "0.1.0",
+  "globalDependencies": {
+    "eventemitter2": "registry:dt/eventemitter2#2.2.0+20161123234806",
+    "roslib": "github:harmishhk/rosjs-typings/roslib/typings.json#c078521380b57dda9e823be09a41385a4d019ef5",
+    "rosmsgs": "github:harmishhk/rosjs-typings/rosmsgs/typings.json#c078521380b57dda9e823be09a41385a4d019ef5",
+    "ros3d": "github:harmishhk/rosjs-typings/ros3d/typings.json#c078521380b57dda9e823be09a41385a4d019ef5",
+    "ros3dnav": "github:harmishhk/ros3dnavts/typings.json#24a1dbc99f520cc12572d3df805d2069fee21e4a",
+    "three": "registry:dt/three#0.84.0+20170323144537"
+  }
+}

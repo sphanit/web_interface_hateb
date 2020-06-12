@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>HR Cooperative Planner</title>
+
+  <!-- style -->
+  <link rel="stylesheet" href="dist/spectre.min.css" />
+  <link rel="stylesheet" href="css/slider.css" />
+
+  <!--ros-->
+  <script type="text/javascript" src="http://localhost/scripts/threejs/current/three.min.js"></script>
+  <script type="text/javascript" src="http://localhost/scripts/threejs/current/ColladaLoader.min.js"></script>
+  <script type="text/javascript" src="http://localhost/scripts/ColladaAnimationCompress/current/ColladaLoader2.min.js"></script>
+  <script type="text/javascript" src="http://localhost/scripts/threejs/current/STLLoader.min.js"></script>
+  <script type="text/javascript" src="http://localhost/scripts/EventEmitter2/current/eventemitter2.min.js"></script>
+  <script type="text/javascript" src="http://localhost/scripts/roslibjs/current/roslib.js"></script>
+  <script type="text/javascript" src="http://localhost/scripts/ros3djs/current/ros3d.js"></script>
+  <script type="text/javascript" src="http://localhost/dist/ros3dnavts/build/ros3dnav.js"></script>
+  <script type="text/javascript" src="http://localhost/dist/rosjs-typings/rosmsgs/build/rosmsgs.js"></script>
+
+  <!--hatebviz-->
+  <script type="text/javascript" src="hatebviz.js"></script>
+</head>
+
+<body onload="init()">
+  <div class="container">
+    <div class="columns">
+      <div class="column col-9" id="viewer">
+        <p id="status">
+          Connecting to rosbridge...
+        </p>
+      </div>
+      <div class="column col-3">
+        <div class="columns col-gapless">
+          <div class="column col-xs-6">
+            <button class="btn btn-block" id="robot-goal-bt">Set Robot Goal</button>
+          </div>
+          <div class="column col-xs-6">
+            <button class="btn btn-block" id="teleport-robot-bt">Teleport Robot</button>
+          </div>
+        </div>
+        <label class="form-label" for="message-area">Visualization</label>
+        <div class="columns col-gapless col-multiline">
+          <div class="column col-xs-4" style="padding-bottom: 0px; padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="robot-global-plan-cb" />
+              <i class="form-icon"></i> R-GP
+            </label>
+          </div>
+          <div class="column col-xs-4" style="padding-bottom: 0px; padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="robot-local-plan-cb" />
+              <i class="form-icon"></i> R-LP
+            </label>
+          </div>
+          <div class="column col-xs-4" style="padding-bottom: 0px; padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="robot-local-poses-cb" />
+              <i class="form-icon"></i> R-Poses
+            </label>
+          </div>
+          <div class="column col-xs-4" style="padding-bottom: 0px; padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="human-global-plans-cb" />
+              <i class="form-icon"></i> H-GP
+            </label>
+          </div>
+          <div class="column col-xs-4" style="padding-bottom: 0px; padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="human-local-plans-cb" />
+              <i class="form-icon"></i> H-LP
+            </label>
+          </div>
+          <div class="column col-xs-4" style="padding-bottom: 0px; padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="human-local-poses-cb" />
+              <i class="form-icon"></i> H-Poses
+            </label>
+          </div>
+          <div class="column col-xs-12" style="padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="prediction-markers-cb" />
+              <i class="form-icon"></i> Human Predictions
+            </label>
+          </div>
+        </div>
+        <label class="form-label" for="message-area">Parameters</label>
+        <div class="form-group">
+          <div class="input-group">
+            <div class="columns col-gapless">
+              <div class="column col-10" style="padding-bottom: 0px; padding-top: 0px;">
+                <select class="form-select" style="width: 100%" id="double-param-name-sl">
+                  <option>Choose a parameter (double)</option>
+                </select>
+              </div>
+              <div class="column col-2" style="padding-bottom: 0px; padding-top: 0px;">
+                <input type="text" class="form-input" placeholder="value" style="width: 100%" id="double-param-value-ip" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="columns col-gapless">
+            <div class="column col-10" style="padding-bottom: 0px; padding-top: 0px;">
+              <select class="form-select" style="width: 100%" id="bool-param-name-sl">
+                <option>Choose a parameter (bool)</option>
+              </select>
+            </div>
+            <div class="column col-2" style="padding-bottom: 0px; padding-top: 0px;">
+              <label class="form-switch" style="padding-bottom: 15%; width: 100%; margin-left: 20%">
+                <input type="checkbox" id="bool-param-value-cb"/> <i class="form-icon"></i>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="form-group">
+          <button class="btn btn-block" id="reset-simulation-bt">Reset Simulation</button>
+        </div>
+        <div class="form-group">
+          <label class="form-switch"> <input type="checkbox" id="follow-plans-cb" />
+              <i class="form-icon"></i> Follow Suggested Plans
+            </label>
+        </div>
+        <div class="form-group">
+          <div class="columns col-gapless">
+            <div class="col-4">
+              <input type="text" class="form-input" placeholder="Human ID" id="human-id-ip" />
+            </div>
+            <div class="col-4">
+              <button class="btn btn-block" id="add-human-bt">Add</button>
+            </div>
+            <div class="col-4">
+              <button class="btn btn-block" id="delete-human-bt">Delete</button>
+            </div>
+          </div>
+          <div class="columns col-gapless">
+            <div class="col-4">
+              <button class="btn btn-block" id="add-sub-goal-bt">Subgoal</button>
+            </div>
+            <div class="col-4">
+              <button class="btn btn-block" id="update-goal-bt">Update</button>
+            </div>
+            <div class="col-4">
+              <button class="btn btn-block" id="teleport-human-bt">Teleport</button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Controller frequency</label>
+          <div class="input-group">
+            <input type="range" id="controller-freq-rg" min="0.1" max="20.0" step="0.1" />
+            <span class="label" id="controller-freq-lb">0</span>
+          </div>
+        </div>
+        <label class="form-label" for="message-area">Visualization</label>
+        <div class="columns col-gapless col-multiline">
+          <div class="column col-xs-4" style="padding-bottom: 0px; padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="sim-human-cplans-cb" />
+              <i class="form-icon"></i> C-Plans
+            </label>
+          </div>
+          <div class="column col-xs-4" style="padding-bottom: 0px; padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="sim-human-pplans-cb" />
+              <i class="form-icon"></i> P-Plans
+            </label>
+          </div>
+          <div class="column col-xs-4" style="padding-bottom: 0px; padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="sim-human-poses-cb" />
+              <i class="form-icon"></i> P-Poses
+            </label>
+          </div>
+          <div class="column col-xs-12" style="padding-top: 0px;">
+            <label class="form-switch"> <input type="checkbox" id="sim-human-markers-cb" />
+              <i class="form-icon"></i> Human Marker
+            </label>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <label class="form-label" for="message-area">Experiments</label>
+        <div class="form-group">
+          <div class="columns col-gapless">
+            <div class="column col-6" style="padding-bottom: 0px; padding-top: 0px;">
+              <select class="form-select" style="width: 100%" id="experiments-sl">
+                <option>Choose an experiment</option>
+              </select>
+            </div>
+            <div class="column col-3" style="padding-bottom: 0px; padding-top: 0px;">
+              <button class="btn btn-block" style="width: 100%" id="experiment-reset-bt">Reset</button>
+            </div>
+            <div class="column col-3" style="padding-bottom: 0px; padding-top: 0px;">
+              <button class="btn btn-block" style="width: 100%" id="experiment-start-bt">Start</button>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="form-group">
+          <label class="form-label" for="message-lb">Message</label>
+          <textarea readonly class="form-input" id="message-lb" placeholder="" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "/workspace/roslib/typings.json",
+    "raw": "file:../roslib/typings.json",
+    "main": "index.d.ts",
+    "version": "0.1.0",
+    "name": "roslib"
+  }
+}

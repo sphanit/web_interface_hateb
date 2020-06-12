@@ -1,0 +1,10 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/harmishhk/ros3dnavts/24a1dbc99f520cc12572d3df805d2069fee21e4a/typings.json",
+    "raw": "github:harmishhk/ros3dnavts/typings.json#24a1dbc99f520cc12572d3df805d2069fee21e4a",
+    "main": "build/ros3dnav.d.ts",
+    "version": "0.1.0",
+    "name": "ros3dnav"
+  }
+}

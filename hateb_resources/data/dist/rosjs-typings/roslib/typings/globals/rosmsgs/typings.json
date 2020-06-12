@@ -1,0 +1,13 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "/workspace/rosmsgs/typings.json",
+    "raw": "file:../rosmsgs/typings.json",
+    "version": "0.1.5",
+    "files": [
+      "build/rosmsgs.d.ts",
+      "src/tfWebRepublisher.d.ts"
+    ],
+    "name": "rosmsgs"
+  }
+}

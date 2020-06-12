@@ -1,0 +1,14 @@
+{
+  "name": "ros3dnav",
+  "main": "build/ros3dnav.d.ts",
+  "homepage": "https://github.com/harmishhk/ros3dnav",
+  "version": "0.1.0",
+  "globalDependencies": {
+    "eventemitter2": "registry:dt/eventemitter2#2.2.0+20161123234806",
+    "roslib": "github:harmishhk/rosjs-typings/roslib/typings.json#c078521380b57dda9e823be09a41385a4d019ef5",
+    "rosmsgs": "github:harmishhk/rosjs-typings/rosmsgs/typings.json#c078521380b57dda9e823be09a41385a4d019ef5",
+    "ros3d": "github:harmishhk/rosjs-typings/ros3d/typings.json#c078521380b57dda9e823be09a41385a4d019ef5",
+    "three": "registry:dt/three#0.84.0+20170323144537",
+    "three-projector": "registry:dt/three-projector#0.0.0+20160405225030"
+  }
+}
